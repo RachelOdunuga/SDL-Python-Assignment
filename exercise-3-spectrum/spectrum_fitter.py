@@ -1,16 +1,55 @@
 
-#importing necessary libraries
 from scipy.optimize import curve_fit
 import numpy as np 
 import matplotlib.pyplot as plt
 
-file = "/Users/caleicat/Downloads/spectrum.txt" #uploading file to python
-data = np.loadtxt(file, delimiter=',', skiprows = 27) #skipping header data and loading data from file
+# file = "/Users/caleicat/Downloads/spectrum.txt" #uploading file to python
+# data = np.loadtxt(file, delimiter=',', skiprows = 27) #skipping header data and loading data from file
 
-wavelengths = data[:,0] #unpacking data
-fluxes = data[:,1]
+# wavelengths = data[:,0] #unpacking data
+# fluxes = data[:,1]
 
 # defining function to use w/ curve_fit for fitting background
+
+filename = 'spectrum.txt'
+
+def parse_spectrum(filename):
+    header = {}
+    wavelengths = []
+    fluxes = []
+    current_key = None
+
+    with open(filename, "r") as f:
+        for line in f:
+            line = line.strip()
+
+            if line.startswith("#"): # header key line
+                key = line[1:].strip()
+                if key not in ("DATA", ""):
+                    current_key = key
+                continue
+
+            if current_key:    # header value line
+                header[current_key] = line
+                current_key = None
+                continue
+
+            if line.startswith("WAVELENGTH"): # skipping column header
+                continue
+
+            if "," in line:  # rows with data
+                try:
+                    w, fl = map(float, line.split(","))
+                    wavelengths.append(w)
+                    fluxes.append(fl)
+                except ValueError:
+                    pass
+
+    return header, np.array(wavelengths), np.array(fluxes)
+
+
+header, wavelengths, fluxes = parse_spectrum(filename)
+
 
 def polynomial(x, *params):
     """ a polynomial function to use for modelling spectra background"""
