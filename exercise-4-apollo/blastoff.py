@@ -93,6 +93,7 @@ def groundtrack_map(data, units, altitude = False):
             plt.scatter(data['LONG'], data['GC LAT'], color='black')
         plt.xlabel(f"Longitude ({units['LONG']})")
         plt.ylabel(f'Latitude ({units['GC LAT']})')
+        plt.grid()
         plt.title(title)
         plt.tight_layout()
 
