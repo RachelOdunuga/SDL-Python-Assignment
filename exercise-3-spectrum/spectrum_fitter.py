@@ -2,6 +2,7 @@
 from scipy.optimize import curve_fit
 import numpy as np 
 import matplotlib.pyplot as plt
+import sys
 
 # file = "/Users/caleicat/Downloads/spectrum.txt" #uploading file to python
 # data = np.loadtxt(file, delimiter=',', skiprows = 27) #skipping header data and loading data from file
@@ -72,7 +73,7 @@ def gaussian(x, amp, mu, sig, c_0):
 # fitting background
 #need to mask peak for fitting - going to use sigma clipping
 
-def fit_function_bkg(w, f, deg, sig, max_iter, plot):
+def fit_function_bkg(w, f, deg, sig, max_iter, will_u_plot):
     """
     Fit a polynomial to background of spectra using sigma clipping, 
     plots the result, and prints parameters. 
@@ -104,7 +105,7 @@ def fit_function_bkg(w, f, deg, sig, max_iter, plot):
     popt_bkg, pcov_final = curve_fit(polynomial, w[mask], f[mask], p0=p0)
     final_bkg = polynomial(w, *popt_bkg)
 
-    if plot == True:
+    if will_u_plot == True:
         plt.scatter(w, f, label="Data")
         plt.plot(w, final_bkg, linewidth=2, color='orange', label="Background Fit")
         plt.legend()
@@ -114,8 +115,6 @@ def fit_function_bkg(w, f, deg, sig, max_iter, plot):
         plt.title("Background Fitting Result")
     print(f"The parameters for the background fit are: {popt_bkg}")
     return popt_bkg, pcov_final, final_bkg 
-
-popt_bkg, pcov_bkg, final_bkg = fit_function_bkg(wavelengths, fluxes, 5, 2, 5, plot=True)
 
 # fitting peak
 
@@ -130,7 +129,7 @@ def fit_spectra(w, f, deg, sig, max_iter, plot):
     sig = number of standard deviations for sigma clipping for background fit 
     max_iter = max number of iterations for background fitting 
     """
-    popt_bkg, pcov_bkg, final_bkg = fit_function_bkg(w, f, deg, sig, max_iter, plot=False)
+    popt_bkg, pcov_bkg, final_bkg = fit_function_bkg(w, f, deg, sig, max_iter, will_u_plot=False)
 
     bkg_subtracted = f - final_bkg
 
@@ -154,5 +153,13 @@ def fit_spectra(w, f, deg, sig, max_iter, plot):
         plt.legend()
     print(f"The parameters for the Gaussian fit are: {popt}")
     print(f"The peak location is at {popt[1]} angstrom.")
+    return popt, pcov
 
-fit_spectra(wavelengths, fluxes, 5, 2, 5, plot=True)
+def main(file):
+    header, wavelengths, fluxes = parse_spectrum(file)
+    fit_spectra(wavelengths, fluxes, 2, 2, 5, plot=True)
+    return 
+
+if __name__ == '__main__':
+    args = sys.argv[1:]
+    main(args[0])
