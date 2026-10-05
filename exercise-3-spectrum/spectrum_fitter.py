@@ -114,6 +114,7 @@ def fit_function_bkg(w, f, deg, sig, max_iter, will_u_plot):
         plt.ylabel("Flux")
         plt.title("Background Fitting Result")
     print(f"The parameters for the background fit are: {popt_bkg}")
+    print(f"The errors for the background fit's parameters are +/- {np.sqrt(np.diag(pcov_final))}")
     return popt_bkg, pcov_final, final_bkg 
 
 # fitting peak
@@ -152,6 +153,7 @@ def fit_spectra(w, f, deg, sig, max_iter, plot):
         plt.grid(True)
         plt.legend()
     print(f"The parameters for the Gaussian fit are: {popt}")
+    print(f"The errors for the Gaussian fit's parameters are +/- {np.sqrt(np.diag(pcov))}")
     print(f"The peak location is at {popt[1]} angstrom.")
     return popt, pcov
 
