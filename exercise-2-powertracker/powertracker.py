@@ -3,6 +3,11 @@ import numpy as np
 import random
 
 i = 1
+
+results = []
+maxima = []
+minima = []
+
 number = random.randint(1, 20)
 decision = random.randint(0, 1)
 if decision == 0:
@@ -11,16 +16,14 @@ if decision == 0:
 else:
     prev_result = number**3
     print(f"Loop {i}: {number}^3 = {prev_result}")
-results = []
+
 results.append(prev_result)
-maxima = []
-minima = []
 
-result = prev_result+1
 
-while result % prev_result != 0:
+result = prev_result 
+
+while True:
     i+=1
-    prev_result = result
     number = random.randint(1, 20)
     decision = random.randint(0, 1)
     if decision == 0:
@@ -29,11 +32,17 @@ while result % prev_result != 0:
     else:
         result = number**3
         print(f"Loop {i}: {number}^3 = {result}")
+
     results.append(result)
     maximum = np.max(results)
     maxima.append(maximum)
     minimum = np.min(results)
     minima.append(minimum)
+
+    if result % prev_result == 0:
+        break
+
+    prev_result = result
 
 
 print(f"The largest result is {np.max(maxima)}")
