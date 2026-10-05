@@ -159,7 +159,7 @@ def fit_spectra(w, f, deg, sig, max_iter, plot):
 
 def main(file):
     header, wavelengths, fluxes = parse_spectrum(file)
-    fit_spectra(wavelengths, fluxes, 2, 2, 5, plot=True)
+    fit_spectra(wavelengths, fluxes, 1, 2, 5, plot=True)
     return 
 
 if __name__ == '__main__':
