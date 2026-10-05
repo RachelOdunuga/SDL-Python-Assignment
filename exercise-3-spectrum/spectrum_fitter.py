@@ -4,15 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-# file = "/Users/caleicat/Downloads/spectrum.txt" #uploading file to python
-# data = np.loadtxt(file, delimiter=',', skiprows = 27) #skipping header data and loading data from file
-
-# wavelengths = data[:,0] #unpacking data
-# fluxes = data[:,1]
-
 # defining function to use w/ curve_fit for fitting background
-
-filename = 'spectrum.txt'
 
 def parse_spectrum(filename):
     header = {}
@@ -47,9 +39,6 @@ def parse_spectrum(filename):
                     pass
 
     return header, np.array(wavelengths), np.array(fluxes)
-
-
-header, wavelengths, fluxes = parse_spectrum(filename)
 
 
 def polynomial(x, *params):
@@ -106,6 +95,7 @@ def fit_function_bkg(w, f, deg, sig, max_iter, will_u_plot):
     final_bkg = polynomial(w, *popt_bkg)
 
     if will_u_plot == True:
+        plt.figure(figsize=(10,5))
         plt.scatter(w, f, label="Data")
         plt.plot(w, final_bkg, linewidth=2, color='orange', label="Background Fit")
         plt.legend()
@@ -144,8 +134,9 @@ def fit_spectra(w, f, deg, sig, max_iter, plot):
 
     popt, pcov = curve_fit(gaussian, w, bkg_subtracted, p0=p0)
     if plot == True:
+        plt.figure(figsize=(10,5))
         plt.plot(w, f, label="Data")
-        plt.plot(w, gaussian(wavelengths, *popt) + np.median(final_bkg), color = "red", label="Gaussian Result")
+        plt.plot(w, gaussian(w, *popt) + np.median(final_bkg), color = "red", label="Gaussian Result")
         plt.plot(w, final_bkg, color="orange", label="Background Fit Result")
         plt.xlabel(f"Wavelength (Angstrom)")
         plt.ylabel(r"Flux (erg s^{-1} cm^{-2})")
