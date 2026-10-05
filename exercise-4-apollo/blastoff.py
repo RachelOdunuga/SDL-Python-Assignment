@@ -5,6 +5,8 @@ import sys
 
 def parse_apollo(filename):
 
+    """parsing apollo txt data and return arrays with units."""
+
     data = {}  # dictionary for data arrays
     units = {}  # dictionary for units
     headings = None
@@ -58,6 +60,9 @@ def parse_apollo(filename):
     return data, units
 
 def plot_parameters(data, units):
+
+    """plotting all parameters as functions of time."""
+
     time = data['TIME']
     for key in data:
         if key == 'TIME':
@@ -72,6 +77,9 @@ def plot_parameters(data, units):
         plt.show()
 
 def groundtrack(data, units):
+
+    """plotting the Apollo 10 ground track."""
+
     plt.figure(figsize=(10,5))
     plt.plot(data['LONG'], data['GC LAT'])
     plt.xlabel(f"Longitude ({units['LONG']})")
@@ -82,6 +90,9 @@ def groundtrack(data, units):
     plt.show()
 
 def groundtrack_map(data, units, altitude = False):
+
+    """plotting the ground track on maps."""
+
     def plot_map(im, extent, title):
         fig, ax = plt.subplots(figsize=(10,5))
         ax.set_aspect("equal")
